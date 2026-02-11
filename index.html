@@ -1,409 +1,287 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyberpunk CRM</title>
+    <title>CYBER-CRM 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Cyberpunk style: Dark theme, neon glows, futuristic fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
         
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00fbff;
+            --cyber-black: #050505;
+        }
+
         body {
-            background-color: #0a0a0a;
-            color: #00ff00;
-            font-family: 'VT323', monospace;
-            margin: 0;
-            padding: 20px;
+            background-color: var(--cyber-black);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif, "Microsoft YaHei";
             overflow-x: hidden;
         }
-        
-        h1, h2 {
-            font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
-            color: #ff00ff;
+
+        .cyber-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 251, 255, 0.2);
         }
+
+        .neon-text-pink { text-shadow: 0 0 5px var(--neon-pink); color: var(--neon-pink); }
+        .neon-border-pink { border-color: var(--neon-pink); box-shadow: 0 0 10px rgba(255, 0, 255, 0.2); }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 20px #00ffff;
-            background: rgba(0, 0, 0, 0.8);
+        input, select, button {
+            background: #111 !important;
+            border: 1px solid var(--neon-blue) !important;
+            color: white !important;
         }
-        
-        .tabs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-        
-        .tab-button {
-            background: none;
-            border: none;
-            color: #00ff00;
-            font-size: 1.2em;
-            cursor: pointer;
-            text-shadow: 0 0 5px #00ff00;
-            padding: 10px 20px;
-        }
-        
-        .tab-button.active {
-            color: #ff00ff;
-            text-shadow: 0 0 10px #ff00ff;
-            border-bottom: 2px solid #ff00ff;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        label {
-            margin: 10px 0 5px;
-            color: #00ffff;
-            text-shadow: 0 0 5px #00ffff;
-        }
-        
-        input, select {
-            background: #1a1a1a;
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            padding: 8px;
-            font-family: 'VT323', monospace;
-            box-shadow: 0 0 10px #00ff00;
-        }
-        
-        button {
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            border: none;
-            color: #000;
-            padding: 10px;
-            margin-top: 20px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            text-shadow: none;
-            box-shadow: 0 0 15px #ff00ff;
-        }
-        
-        button:hover {
-            box-shadow: 0 0 25px #00ffff;
-        }
-        
-        .list-item {
-            background: rgba(0, 255, 0, 0.1);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px dashed #00ff00;
-            box-shadow: 0 0 10px #00ff00;
-        }
-        
-        .dashboard {
-            margin-top: 30px;
-        }
-        
-        .funnel {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .funnel-stage {
-            width: 80%;
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            color: #000;
-            padding: 10px;
-            margin: 5px 0;
-            text-align: center;
-            box-shadow: 0 0 15px #ff00ff;
-        }
-        
-        .reminder {
-            color: #ffff00;
-            text-shadow: 0 0 10px #ffff00;
-            margin-top: 20px;
-        }
-        
-        /* Neon glow animation */
-        @keyframes neon {
-            0% { text-shadow: 0 0 10px #ff00ff; }
-            50% { text-shadow: 0 0 20px #00ffff; }
-            100% { text-shadow: 0 0 10px #ff00ff; }
-        }
-        
-        h1 {
-            animation: neon 2s infinite;
+
+        .tab-active {
+            background: var(--neon-blue) !important;
+            color: black !important;
+            box-shadow: 0 0 15px var(--neon-blue);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Cyberpunk CRM</h1>
-        
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab('new')">新增页面</button>
-            <button class="tab-button" onclick="showTab('retention')">留存页面</button>
-            <button class="tab-button" onclick="showTab('dashboard')">看板</button>
+<body class="p-4 md:p-8">
+
+    <header class="mb-8 border-b-2 border-pink-500 pb-4 flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-bold neon-text-pink">SYSTEM: CYBER-CRM</h1>
+            <p class="text-xs opacity-70">DATE: <span id="current-date"></span> | STATUS: ENCRYPTED</p>
         </div>
-        
-        <div id="new" class="tab-content active">
-            <h2>新增记录</h2>
-            <form id="newForm">
-                <label>姓名：</label>
-                <input type="text" id="name" required>
-                
-                <label>渠道：</label>
-                <select id="channel" required>
-                    <option value="抖音">抖音</option>
-                    <option value="Tinder">Tinder</option>
-                    <option value="Bumble">Bumble</option>
-                    <option value="红书">红书</option>
-                    <option value="积木">积木</option>
-                    <option value="线下搭讪">线下搭讪</option>
-                </select>
-                
-                <label>打分（4-8，0.5间隔）：</label>
-                <select id="score" required>
-                    <option value="4">4</option>
-                    <option value="4.5">4.5</option>
-                    <option value="5">5</option>
-                    <option value="5.5">5.5</option>
-                    <option value="6">6</option>
-                    <option value="6.5">6.5</option>
-                    <option value="7">7</option>
-                    <option value="7.5">7.5</option>
-                    <option value="8">8</option>
-                </select>
-                
-                <label>标签：</label>
-                <select id="tag" required>
-                    <option value="国女">国女</option>
-                    <option value="S女">S女</option>
-                    <option value="老登">老登</option>
-                    <option value="精神小妹">精神小妹</option>
-                </select>
-                
-                <label>其他信息：</label>
-                <select id="other" required>
-                    <option value="窗口大">窗口大</option>
-                    <option value="没兴趣">没兴趣</option>
-                </select>
-                
-                <button type="submit">添加</button>
-            </form>
-            
-            <h2>新增列表</h2>
-            <div id="newList"></div>
-        </div>
-        
-        <div id="retention" class="tab-content">
-            <h2>留存管理</h2>
-            <form id="retentionForm">
-                <label>选择姓名：</label>
-                <select id="retentionName"></select>
-                
-                <label>更新阶段：</label>
-                <select id="stage" required>
-                    <option value="添加">添加</option>
-                    <option value="一约">一约</option>
-                    <option value="二约">二约</option>
-                    <option value="三约">三约</option>
-                    <option value="放弃">放弃</option>
-                    <option value="得吃">得吃</option>
-                </select>
-                
-                <button type="submit">更新</button>
-            </form>
-            
-            <h2>留存列表</h2>
-            <div id="retentionList"></div>
-            
-            <div id="reminders" class="reminder"></div>
-        </div>
-        
-        <div id="dashboard" class="tab-content">
-            <h2>看板</h2>
-            
-            <form id="goalForm">
-                <label>设置目标（新增/月）：</label>
-                <input type="number" id="monthlyGoal" placeholder="每月新增目标">
-                <button type="submit">保存目标</button>
-            </form>
-            
-            <div class="dashboard">
-                <h3>统计</h3>
-                <p id="dailyNew"></p>
-                <p id="weeklyNew"></p>
-                <p id="monthlyNew"></p>
-                
-                <h3>转化漏斗</h3>
-                <div class="funnel">
-                    <div class="funnel-stage" id="funnelAdded">添加: 0</div>
-                    <div class="funnel-stage" id="funnelFirst">一约: 0</div>
-                    <div class="funnel-stage" id="funnelSecond">二约: 0</div>
-                    <div class="funnel-stage" id="funnelThird">三约: 0</div>
-                    <div class="funnel-stage" id="funnelSuccess">得吃: 0</div>
-                    <div class="funnel-stage" id="funnelAbandon">放弃: 0</div>
+        <nav class="flex gap-2">
+            <button onclick="switchTab('new')" id="btn-new" class="px-4 py-1 text-sm tab-active">新增</button>
+            <button onclick="switchTab('retention')" id="btn-retention" class="px-4 py-1 text-sm">留存</button>
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-4 py-1 text-sm">看板</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="sec-new" class="space-y-6">
+            <div class="cyber-card p-6 rounded-lg">
+                <h2 class="mb-4 text-xl border-l-4 border-pink-500 pl-2">ENTRY / 新增录入</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs mb-1">姓名 / Alias</label>
+                        <input type="text" id="form-name" class="w-full p-2 rounded" placeholder="请输入...">
+                    </div>
+                    <div>
+                        <label class="block text-xs mb-1">渠道 / Channel</label>
+                        <select id="form-channel" class="w-full p-2 rounded text-white">
+                            <option>抖音</option><option>Tinder</option><option>Bumble</option>
+                            <option>红书</option><option>积木</option><option>线下搭讪</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs mb-1">打分 / Rating (4-8)</label>
+                        <select id="form-rating" class="w-full p-2 rounded">
+                            </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs mb-1">标签 / Tag</label>
+                        <select id="form-tag" class="w-full p-2 rounded">
+                            <option>国女</option><option>S女</option><option>老登</option><option>精神小妹</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs mb-1">备注 / Intel</label>
+                        <div class="flex gap-4 mt-2">
+                            <label><input type="checkbox" value="窗口大" class="form-intel"> 窗口大</label>
+                            <label><input type="checkbox" value="没兴趣" class="form-intel"> 没兴趣</label>
+                        </div>
+                    </div>
                 </div>
-                
-                <h3>达成 vs 目标</h3>
-                <p id="vsGoal"></p>
+                <button onclick="saveLead()" class="mt-6 w-full py-3 bg-pink-600 hover:bg-pink-500 transition-all font-bold">EXECUTE SAVE / 保存录入</button>
             </div>
-        </div>
-    </div>
-    
+        </section>
+
+        <section id="sec-retention" class="hidden space-y-4">
+            <div class="cyber-card p-4 rounded-lg neon-border-pink">
+                <h3 class="text-pink-500 font-bold mb-2 flex items-center gap-2">
+                    <i data-lucide="bell-ring" class="w-4 h-4"></i> 智能提醒 (T+7 待推进)
+                </h3>
+                <div id="reminder-list" class="text-sm space-y-2 text-gray-300">
+                    </div>
+            </div>
+            
+            <div id="lead-list" class="space-y-4">
+                </div>
+        </section>
+
+        <section id="sec-dashboard" class="hidden space-y-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="cyber-card p-4 text-center">
+                    <div class="text-xs opacity-70">今日新增</div>
+                    <div id="stat-day" class="text-2xl font-bold text-pink-500">0</div>
+                </div>
+                <div class="cyber-card p-4 text-center">
+                    <div class="text-xs opacity-70">本周新增</div>
+                    <div id="stat-week" class="text-2xl font-bold text-pink-500">0</div>
+                </div>
+                <div class="cyber-card p-4 text-center">
+                    <div class="text-xs opacity-70">本月新增</div>
+                    <div id="stat-month" class="text-2xl font-bold text-pink-500">0</div>
+                </div>
+                <div class="cyber-card p-4 text-center border-pink-500">
+                    <div class="text-xs opacity-70">目标达成</div>
+                    <div id="stat-goal-pct" class="text-2xl font-bold text-white">0%</div>
+                </div>
+            </div>
+
+            <div class="cyber-card p-6">
+                <h3 class="mb-4 text-sm font-bold">CONVERSION FUNNEL / 转化漏斗</h3>
+                <div id="funnel-container" class="space-y-2">
+                    </div>
+            </div>
+
+            <div class="cyber-card p-6">
+                <h3 class="mb-2 text-sm font-bold">SET GOAL / 手动设定月目标</h3>
+                <input type="number" id="goal-input" class="p-2 w-32 mr-2" value="10">
+                <button onclick="updateGoal()" class="px-4 py-2 bg-blue-600 text-xs">更新目标</button>
+            </div>
+        </section>
+    </main>
+
     <script>
-        // 使用 localStorage 存储数据
-        let records = JSON.parse(localStorage.getItem('crmRecords')) || [];
-        let goals = JSON.parse(localStorage.getItem('crmGoals')) || { monthly: 0 };
-        
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
-            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
-            if (tabId === 'retention') updateRetentionOptions();
-            if (tabId === 'dashboard') updateDashboard();
+        // --- Core Data Logic ---
+        let leads = JSON.parse(localStorage.getItem('cyber_leads') || '[]');
+        let monthlyGoal = localStorage.getItem('cyber_goal') || 10;
+
+        const STAGES = ["添加", "一约", "二约", "三约", "得吃", "放弃"];
+
+        function init() {
+            document.getElementById('current-date').innerText = new Date().toISOString().split('T')[0];
+            renderRatingOptions();
+            refreshUI();
+            lucide.createIcons();
         }
-        
-        // 新增页面
-        document.getElementById('newForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const record = {
-                name: document.getElementById('name').value,
-                channel: document.getElementById('channel').value,
-                score: document.getElementById('score').value,
-                tag: document.getElementById('tag').value,
-                other: document.getElementById('other').value,
-                date: new Date().toISOString(),
-                stage: '添加'  // 初始阶段
-            };
-            records.push(record);
-            localStorage.setItem('crmRecords', JSON.stringify(records));
-            updateNewList();
-            e.target.reset();
-        });
-        
-        function updateNewList() {
-            const list = document.getElementById('newList');
-            list.innerHTML = '';
-            records.forEach(rec => {
-                const item = document.createElement('div');
-                item.classList.add('list-item');
-                item.innerHTML = `姓名: ${rec.name} | 渠道: ${rec.channel} | 打分: ${rec.score} | 标签: ${rec.tag} | 其他: ${rec.other} | 日期: ${new Date(rec.date).toLocaleDateString()}`;
-                list.appendChild(item);
-            });
-        }
-        
-        // 留存页面
-        function updateRetentionOptions() {
-            const select = document.getElementById('retentionName');
-            select.innerHTML = '';
-            records.forEach(rec => {
-                const option = document.createElement('option');
-                option.value = rec.name;
-                option.textContent = rec.name;
-                select.appendChild(option);
-            });
-        }
-        
-        document.getElementById('retentionForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const name = document.getElementById('retentionName').value;
-            const stage = document.getElementById('stage').value;
-            const rec = records.find(r => r.name === name);
-            if (rec) {
-                rec.stage = stage;
-                rec.updateDate = new Date().toISOString();  // 更新时间用于T+7
-                localStorage.setItem('crmRecords', JSON.stringify(records));
-                updateRetentionList();
-                updateReminders();
+
+        function renderRatingOptions() {
+            const select = document.getElementById('form-rating');
+            for(let i=4; i<=8; i+=0.5) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.innerText = i;
+                select.appendChild(opt);
             }
-        });
-        
-        function updateRetentionList() {
-            const list = document.getElementById('retentionList');
-            list.innerHTML = '';
-            records.forEach(rec => {
-                const item = document.createElement('div');
-                item.classList.add('list-item');
-                item.innerHTML = `姓名: ${rec.name} | 阶段: ${rec.stage} | 标签: ${rec.tag} | 更新日期: ${rec.updateDate ? new Date(rec.updateDate).toLocaleDateString() : 'N/A'}`;
-                list.appendChild(item);
-            });
         }
-        
-        function updateReminders() {
-            const reminders = document.getElementById('reminders');
-            reminders.innerHTML = '<h3>邀约提醒</h3>';
-            const now = new Date();
-            records.forEach(rec => {
-                if (rec.updateDate) {
-                    const updateDate = new Date(rec.updateDate);
-                    const daysDiff = Math.floor((now - updateDate) / (1000 * 60 * 60 * 24));
-                    let reminderText = '';
-                    if (daysDiff >= 7 && rec.stage !== '得吃' && rec.stage !== '放弃' && rec.other === '窗口大') {
-                        reminderText = `可以邀约: ${rec.name} (T+${daysDiff}, 标签: ${rec.tag}, 画像: 高兴趣潜力)`;
-                    } else if (rec.tag === '精神小妹' && rec.stage === '添加') {
-                        reminderText = `注意邀约: ${rec.name} (标签敏感，建议观察)`;
-                    }
-                    if (reminderText) {
-                        const p = document.createElement('p');
-                        p.textContent = reminderText;
-                        reminders.appendChild(p);
-                    }
-                }
-            });
-        }
-        
-        // 看板
-        document.getElementById('goalForm').addEventListener('submit', e => {
-            e.preventDefault();
-            goals.monthly = parseInt(document.getElementById('monthlyGoal').value) || 0;
-            localStorage.setItem('crmGoals', JSON.stringify(goals));
-            updateDashboard();
-        });
-        
-        function updateDashboard() {
-            const now = new Date();
-            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const startOfWeek = new Date(now);
-            startOfWeek.setDate(now.getDate() - now.getDay());
-            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+        function saveLead() {
+            const name = document.getElementById('form-name').value;
+            if(!name) return alert("姓名必填");
             
-            const dailyNew = records.filter(r => new Date(r.date) >= startOfDay).length;
-            const weeklyNew = records.filter(r => new Date(r.date) >= startOfWeek).length;
-            const monthlyNew = records.filter(r => new Date(r.date) >= startOfMonth).length;
-            
-            document.getElementById('dailyNew').textContent = `日新增: ${dailyNew}`;
-            document.getElementById('weeklyNew').textContent = `周新增: ${weeklyNew}`;
-            document.getElementById('monthlyNew').textContent = `月新增: ${monthlyNew}`;
-            
-            // 转化漏斗
-            const counts = {
-                添加: 0, 一约: 0, 二约: 0, 三约: 0, 得吃: 0, 放弃: 0
+            const newLead = {
+                id: Date.now(),
+                name,
+                channel: document.getElementById('form-channel').value,
+                rating: document.getElementById('form-rating').value,
+                tag: document.getElementById('form-tag').value,
+                intel: Array.from(document.querySelectorAll('.form-intel:checked')).map(el => el.value),
+                stage: "添加",
+                createdAt: new Date().getTime(),
+                updatedAt: new Date().getTime()
             };
-            records.forEach(r => counts[r.stage]++);
-            Object.keys(counts).forEach(stage => {
-                document.getElementById(`funnel${stage === '添加' ? 'Added' : stage === '一约' ? 'First' : stage === '二约' ? 'Second' : stage === '三约' ? 'Third' : stage === '得吃' ? 'Success' : 'Abandon'}`).textContent = `${stage}: ${counts[stage]}`;
+
+            leads.push(newLead);
+            localStorage.setItem('cyber_leads', JSON.stringify(leads));
+            alert("录入成功！");
+            document.getElementById('form-name').value = '';
+            refreshUI();
+        }
+
+        function updateStage(id, newStage) {
+            leads = leads.map(l => l.id === id ? {...l, stage: newStage, updatedAt: new Date().getTime()} : l);
+            localStorage.setItem('cyber_leads', JSON.stringify(leads));
+            refreshUI();
+        }
+
+        function refreshUI() {
+            renderRetention();
+            renderDashboard();
+            lucide.createIcons();
+        }
+
+        // --- View Logic ---
+        function switchTab(tab) {
+            ['new', 'retention', 'dashboard'].forEach(t => {
+                document.getElementById(`sec-${t}`).classList.add('hidden');
+                document.getElementById(`btn-${t}`).classList.remove('tab-active');
+            });
+            document.getElementById(`sec-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add('tab-active');
+        }
+
+        function renderRetention() {
+            const list = document.getElementById('lead-list');
+            const reminderList = document.getElementById('reminder-list');
+            list.innerHTML = '';
+            reminderList.innerHTML = '';
+
+            const now = new Date().getTime();
+            const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+
+            leads.sort((a,b) => b.updatedAt - a.updatedAt).forEach(l => {
+                // Reminder Logic: T+7 and not finished/given up
+                if (now - l.updatedAt > sevenDaysInMs && l.stage !== "得吃" && l.stage !== "放弃") {
+                    reminderList.innerHTML += `<div class="flex justify-between border-b border-gray-800 pb-1">
+                        <span>⚠️ ${l.name} (${l.tag})</span>
+                        <span class="text-pink-400">已停滞7天+</span>
+                    </div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'cyber-card p-4 rounded flex justify-between items-center';
+                card.innerHTML = `
+                    <div>
+                        <div class="font-bold text-lg">${l.name} <span class="text-xs font-normal opacity-60 ml-2">${l.channel} · ${l.rating}分</span></div>
+                        <div class="text-xs text-blue-400">${l.tag} | ${l.intel.join(', ') || '无特殊备注'}</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <select onchange="updateStage(${l.id}, this.value)" class="text-xs p-1">
+                            ${STAGES.map(s => `<option value="${s}" ${l.stage === s ? 'selected' : ''}>${s}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+                list.appendChild(card);
             });
             
-            // 达成 vs 目标
-            document.getElementById('vsGoal').textContent = `月新增达成: ${monthlyNew} / ${goals.monthly} (${((monthlyNew / goals.monthly) * 100).toFixed(2)}%)`;
+            if(!reminderList.innerHTML) reminderList.innerHTML = "暂无待跟进提醒，保持节奏。";
         }
-        
-        // 初始化
-        updateNewList();
-        updateRetentionList();
-        updateReminders();
-        updateDashboard();
+
+        function renderDashboard() {
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            
+            const dayCount = leads.filter(l => new Date(l.createdAt).toISOString().split('T')[0] === todayStr).length;
+            const monthCount = leads.filter(l => new Date(l.createdAt).getMonth() === now.getMonth()).length;
+            
+            document.getElementById('stat-day').innerText = dayCount;
+            document.getElementById('stat-month').innerText = monthCount;
+            document.getElementById('stat-goal-pct').innerText = Math.round((monthCount / monthlyGoal) * 100) + '%';
+
+            // Funnel
+            const funnelContainer = document.getElementById('funnel-container');
+            funnelContainer.innerHTML = '';
+            STAGES.forEach(s => {
+                const count = leads.filter(l => l.stage === s).length;
+                const pct = (count / (leads.length || 1)) * 100;
+                funnelContainer.innerHTML += `
+                    <div class="text-xs mb-1 flex justify-between"><span>${s}</span> <span>${count}</span></div>
+                    <div class="w-full bg-gray-900 h-2 mb-3">
+                        <div class="bg-blue-500 h-full" style="width: ${pct}%"></div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateGoal() {
+            monthlyGoal = document.getElementById('goal-input').value;
+            localStorage.setItem('cyber_goal', monthlyGoal);
+            refreshUI();
+        }
+
+        init();
     </script>
 </body>
 </html>
